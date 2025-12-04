@@ -15,7 +15,8 @@ def max_pos_seq(lst):
     for num in lst:
         if num > 0:
             current_pos += 1
-            max_pos = max(max_pos, current_pos)
+            if current_pos > max_pos:
+                max_pos = current_pos
         else:
             current_pos = 0
     return max_pos
@@ -72,7 +73,7 @@ def is_balanced_idx(lst, idx):
     if idx < 0 or idx >= len(lst):
         raise IndexError("Index out of bounds")
 
-    left_sum = sum(lst[:idx])
+    left_sum = sum_all(lst[:idx])
     right_prod = 1
     for n in (lst[idx + 1:]):
         right_prod *= n
@@ -93,12 +94,17 @@ def max_balanced_idx(lst):
     Returns:
         int | None: The largest balanced index if any exist, otherwise None.
     """
+    max_idx = 0
     try:
-        max_idx = [i for i in range(len(lst)) if is_balanced_idx(lst, i)]
-        if not max_idx:
-            return None
-        return max(max_idx)
+        for i in range(len(lst)):
+            if is_balanced_idx(lst, i):
+                max_idx = i
+
     except IndexError:
+        return None
+    if max_idx:
+        return max_idx
+    else:
         return None
 
 
@@ -121,13 +127,29 @@ def magic_list(mat):
               False otherwise.
     """
     fram_sum = (
-        sum(mat[0]) +
-        sum(mat[-1]) +
-        sum(row[0] for row in mat) +
-        sum(row[-1] for row in mat) -
+        sum_all(mat[0]) +
+        sum_all(mat[-1]) +
+        sum_all(row[0] for row in mat) +
+        sum_all(row[-1] for row in mat) -
         mat[0][0] - mat[0][-1] - mat[-1][0] - mat[-1][-1]
     )
     inner_sum = 0
     for i in range(1, len(mat) - 1):
-        inner_sum += sum(mat[i][1:-1])
+        inner_sum += sum_all(mat[i][1:-1])
     return fram_sum == inner_sum
+
+
+def sum_all(lst):
+    """
+    Calculate the sum of all elements in a list.
+
+    Args:
+        lst: A list of numeric values.
+
+    Returns:
+        int | float: The sum of all elements in lst.
+    """
+    total = 0
+    for num in lst:
+        total += num
+    return total

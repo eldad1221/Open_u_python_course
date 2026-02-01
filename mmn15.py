@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def load_data(filename: str) -> pd.DataFrame:
-    df = pd.read_csv(filename)
+    df = pd.read_csv(filepath_or_buffer=filename)
     return df
 
 
@@ -19,6 +19,18 @@ def data_details(df: pd.DataFrame) -> tuple[int, int, list]:
 
 
 def max_absolute_magnitude(df: pd.DataFrame) ->  tuple[str, float]:
-    row = df.loc[df['max_absolute_magnitude'].idxmax()]
-    return row['Name'], float(row['Absolute Magnitude'])
+    row = df.loc[df['Absolute Magnitude'].idxmax()]
+    return str(row['Name']), float(row['Absolute Magnitude'])
 
+
+def closest_to_earth(df: pd.DataFrame) -> tuple[str, float]:
+    row = df.loc[df['Miss Dist.(kilometers)'].idxmin()]
+    return str(row['Name']), float(row['Miss Dist.(kilometers)'])
+
+
+if __name__ == '__main__':
+    df1 = load_data('nasa.csv')
+    df1 = mask_data(df1)
+    print(data_details(df1))
+    print(max_absolute_magnitude(df1))
+    print(closest_to_earth(df1))

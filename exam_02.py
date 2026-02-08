@@ -56,3 +56,14 @@ def check(text: str) -> bool:
 
     return check(remaining)
 
+
+def maximal_drop(lst: list[int]) -> int:
+    max_drop = 0
+    max_height = 0
+    for n in lst:
+        if n > max_height:
+            max_height = n
+        elif max_height - n > max_drop:
+            max_drop = max_height - n
+    return max_drop
+
